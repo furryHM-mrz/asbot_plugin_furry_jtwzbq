@@ -1,68 +1,81 @@
-from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
+import logging
+import random
+import requests
 from astrbot.api.star import Context, Star, register
-from astrbot.api import logger
+from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
+from astrbot.api.event.filter import event_message_type, EventMessageType
+import re
+import yaml
+import os
+
+logger = logging.getLogger(__name__)
 
 @register("asbot_plugin_furry_jtwzbq", "furryhm", "监听文字表情时重复发送", "1.0.0")
-class MyPlugin(Star):
+class FurryEmojiPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
+        self.keyword_pairs = []
+        self.trigger_map = {}  #创建触发词到回复的映射字典
 
     async def initialize(self):
-        """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
-    
-    # 监听文本消息，当消息内容为awa时触发
-    @filter.command("awa")  # 筛选文本内容为awa的消息
-    async def reply_awa(self, event: AstrMessageEvent):
-        """监听到awa时回复awa"""
-        # 直接回复固定文本"awa"
-        yield event.plain_result("awa")
+        """加载配置文件"""
+        self.load_config()
 
-    # 监听文本消息，当消息内容为qwq时触发
-    @filter.command("qwq")  # 筛选文本内容为qwq的消息
-    async def reply_qwq(self, event: AstrMessageEvent):
-        """监听到qwq时回复qwq"""
-        # 直接回复固定文本"qwq"
-        yield event.plain_result("qwq")
+    def load_config(self):
+        """加载配置文件"""
+        config_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config = yaml.safe_load(f)
+                self.keyword_pairs = config.get('keywords', [])
+                
+            #创建触发词到回复的映射字典，提高查找效率,懒得写自己品了
+            self.trigger_map = {pair['trigger']: pair['response'] for pair in self.keyword_pairs}
+            logger.info(f"成功加载 {len(self.keyword_pairs)} 对关键词配置")
+        except FileNotFoundError:
+            logger.warning("配置文件未找到，使用默认配置")
+            self.set_default_config()
+        except Exception as e:
+            logger.error(f"加载配置文件时出错: {e}")
+            self.set_default_config()
 
-    # 监听文本消息，当消息内容为uwu时触发
-    @filter.command("uwu")
-    async def reply_uwu(self, event: AstrMessageEvent):
-        """监听到uwu时回复uwu"""
-        # 直接回复固定文本"uwu"
-        yield event.plain_result("uwu")
+    def set_default_config(self):
+        """设置默认配置"""
+        self.keyword_pairs = [
+            {"trigger": "awa", "response": "qwq"},
+            {"trigger": "qwq", "response": "awa"},
+            {"trigger": "uwu", "response": "QAQ"},
+            {"trigger": "QAQ", "response": "uwu"},
+            {"trigger": "owo", "response": "xwx"},
+            {"trigger": "sws", "response": "zwz"},
+            {"trigger": "xwx", "response": "owo"},
+            {"trigger": "zwz", "response": "sws"},
+            {"trigger": "hwh", "response": "xvx"},
+            {"trigger": "xvx", "response": "hwh"},
+            {"trigger": "ywy", "response": "zaz"},
+            {"trigger": "zaz", "response": "ywy"},
+            {"trigger": "mwm", "response": "nwn"},
+            {"trigger": "nwn", "response": "mwm"}
+        ]
+        self.trigger_map = {pair['trigger']: pair['response'] for pair in self.keyword_pairs}
 
-    # 监听文本消息以此类推，懒得写注释。
-    @filter.command("QAQ")
-    async def reply_QAQ(self, event: AstrMessageEvent):
-        yield event.plain_result("QAQ")
+    @event_message_type(EventMessageType.ALL)
+    async def on_message(self, event: AstrMessageEvent) -> MessageEventResult:
+        """
+        处理所有消息事件，检查关键词并回复
+        """
+        msg_obj = event.message_obj
+        text = msg_obj.message_str or ""
+        
+        for trigger, response in self.trigger_map.items():
+            if trigger in text:
+                return event.plain_result(response)
+        
+        if "qwq" in text:
+            return event.plain_result("qwq")
+            
+        return MessageEventResult.CONTINUE
 
-    @filter.command("owo")
-    async def reply_owo(self, event: AstrMessageEvent):
-        yield event.plain_result("owo")
-
-    @filter.command("sws")
-    async def reply_sws(self, event: AstrMessageEvent):
-        yield event.plain_result("sws")
-
-    @filter.command("xwx")
-    async def reply_xwx(self, event: AstrMessageEvent):
-        yield event.plain_result("xwx")
-
-    @filter.command("owo")
-    async def reply_owo(self, event: AstrMessageEvent):
-        yield event.plain_result("owo")
-
-    @filter.command("zwz")
-    async def reply_zwz(self, event: AstrMessageEvent):
-        yield event.plain_result("zwz")
-
-    @filter.command("hwh")
-    async def reply_hwh(self, event: AstrMessageEvent):
-        yield event.plain_result("hwh")
-
-    @filter.command("xvx")
-    async def reply_xvx(self, event: AstrMessageEvent):
-        yield event.plain_result("xvx")
 
     async def terminate(self): 
         pass

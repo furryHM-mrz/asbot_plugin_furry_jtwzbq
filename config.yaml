@@ -1,0 +1,129 @@
+# 关键词回复配置文件
+# 格式: 关键词: 回复内容
+
+keywords:
+  - trigger: "awa"
+    response: "qwq"
+    
+  - trigger: "qwq"
+    response: "awa"
+    
+  - trigger: "uwu"
+    response: "QAQ"
+    
+  - trigger: "QAQ"
+    response: "uwu"
+    
+  - trigger: "owo"
+    response: "xwx"
+    
+  - trigger: "sws"
+    response: "zwz"
+    
+  - trigger: "xwx"
+    response: "owo"
+    
+  - trigger: "zwz"
+    response: "sws"
+    
+  - trigger: "hwh"
+    response: "xvx"
+    
+  - trigger: "xvx"
+    response: "hwh"
+    
+  - trigger: "ywy"
+    response: "zaz"
+    
+  - trigger: "zaz"
+    response: "ywy"
+    
+  - trigger: "mwm"
+    response: "nwn"
+    
+  - trigger: "nwn"
+    response: "mwm"
+    
+  - trigger: "qvq"
+    response: "pwp"
+    
+  - trigger: "pwp"
+    response: "qvq"
+    
+  - trigger: "TAT"
+    response: "TUT"
+    
+  - trigger: "TUT"
+    response: "TAT"
+    
+  - trigger: "Orz"
+    response: "OvO"
+    
+  - trigger: "OvO"
+    response: "Orz"
+    
+  - trigger: "XD"
+    response: "DX"
+    
+  - trigger: "DX"
+    response: "XD"
+    
+  - trigger: ":-)"
+    response: ":-("
+    
+  - trigger: ":-("
+    response: ":-)"
+    
+  - trigger: "^.^"
+    response: "T.T"
+    
+  - trigger: "T.T"
+    response: "^.^"
+    
+  - trigger: ">_<"
+    response: "o_o"
+    
+  - trigger: "o_o"
+    response: ">_<"
+    
+  - trigger: "0w0"
+    response: "0v0"
+    
+  - trigger: "0v0"
+    response: "0w0"
+    
+  - trigger: "@_@"
+    response: "#_#"
+    
+  - trigger: "#_#"
+    response: "@_@"
+    
+  - trigger: "*_*"
+    response: "&_&"
+    
+  - trigger: "&_&"
+    response: "*_*"
+    
+  - trigger: "w"
+    response: "m"
+    
+  - trigger: "m"
+    response: "w"
+    
+  - trigger: "嗷呜"
+    response: "呜嗷"
+    
+  - trigger: "呜嗷"
+    response: "嗷呜"
+    
+  - trigger: "毛毛"
+    response: "爪爪"
+    
+  - trigger: "爪爪"
+    response: "毛毛"
+    
+  - trigger: "尾巴"
+    response: "耳朵"
+    
+  - trigger: "耳朵"
+    response: "尾巴"
