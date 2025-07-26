@@ -65,4 +65,4 @@ class MyPlugin(Star):
         yield event.plain_result("xvx")
 
     async def terminate(self): 
-          pass
+        pass
