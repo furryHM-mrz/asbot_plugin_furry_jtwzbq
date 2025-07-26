@@ -74,7 +74,7 @@ class FurryEmojiPlugin(Star):
         if "qwq" in text:
             return event.plain_result("qwq")
             
-        return MessageEventResult.CONTINUE
+        return event.continue_result()
 
 
     async def terminate(self): 
