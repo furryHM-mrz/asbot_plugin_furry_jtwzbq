@@ -67,15 +67,11 @@ class FurryEmojiPlugin(Star):
         msg_obj = event.message_obj
         text = msg_obj.message_str or ""
         
-        for trigger, response in self.trigger_map.items():
-            if trigger in text:
-                return event.plain_result(response)
-        
-        if "qwq" in text:
-            return event.plain_result("qwq")
+        # 只有当文本完全匹配触发词时才回复
+        if text.strip() in self.trigger_map:
+            return event.plain_result(self.trigger_map[text.strip()])
             
-        return event.continue_result()
-
+        return None
 
     async def terminate(self): 
         pass
