@@ -1,4 +1,3 @@
-import logging
 import random
 import requests
 from astrbot.api.star import Context, Star, register
@@ -8,7 +7,11 @@ import re
 import yaml
 import os
 
-logger = logging.getLogger(__name__)
+def __init__(self, context: Context):
+    super().__init__(context)
+    self.keyword_pairs = []
+    self.trigger_map = {}  # 创建触发词到回复的映射字典
+    self.logger = context.logger
 
 @register("asbot_plugin_furry_jtwzbq", "furryhm", "监听文字表情时重复发送", "1.0.0")
 class FurryEmojiPlugin(Star):
