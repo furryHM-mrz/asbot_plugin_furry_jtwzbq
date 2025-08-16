@@ -32,7 +32,8 @@ class FurryEmojiPlugin(Star):
             # 编译正则表达式模式以提高性能
             self.compiled_patterns = []
             for pair in self.keyword_pairs:
-                pattern = re.compile(pair['trigger'])
+                # 使用 fullmatch 模式编译正则表达式
+                pattern = re.compile(re.escape(pair['trigger']))
                 self.compiled_patterns.append({
                     'pattern': pattern,
                     'trigger': pair['trigger'],
@@ -53,15 +54,22 @@ class FurryEmojiPlugin(Star):
         text = msg_obj.message_str or ""
         
         # 添加调试日志，查看消息发送者信息
-        logger.debug(f"收到消息: {text}, 发送者: {msg_obj.sender}")
+        logger.debug(f"收到消息: '{text}', 发送者: {msg_obj.sender}")
         
         # 使用正则表达式匹配触发词
+        matched_patterns = []
         for pattern_info in self.compiled_patterns:
             if pattern_info['pattern'].fullmatch(text.strip()):
                 logger.debug(f"正则匹配到触发词: {pattern_info['trigger']}")
-                return event.plain_result(pattern_info['response'])
-            else:
-                logger.debug(f"未匹配到触发词: {text.strip()}")
+                matched_patterns.append(pattern_info)
+        
+        # 如果有匹配的模式，随机选择一个进行回复
+        if matched_patterns:
+            selected_pattern = random.choice(matched_patterns)
+            logger.debug(f"选择回复: {selected_pattern['response']}")
+            return event.plain_result(selected_pattern['response'])
+        else:
+            logger.debug(f"未匹配到触发词: '{text.strip()}'")
             
         return None
 
