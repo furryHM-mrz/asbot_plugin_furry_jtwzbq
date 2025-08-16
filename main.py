@@ -10,12 +10,12 @@ import os
 
 logger = logging.getLogger(__name__)
 
-@register("asbot_plugin_furry_jtwzbq", "furryhm", "监听文字表情时重复发送", "1.2.0")
+@register("asbot_plugin_furry_jtwzbq", "furryhm", "正则表达式文字表情发送", "2.0.0")
 class FurryEmojiPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
         self.keyword_pairs = []
-        self.trigger_map = {}  #创建触发词到回复的映射字典
+        self.compiled_patterns = []  # 存储编译后的正则表达式
 
     async def initialize(self):
         """加载配置文件"""
@@ -29,14 +29,20 @@ class FurryEmojiPlugin(Star):
                 config = yaml.safe_load(f)
                 self.keyword_pairs = config.get('keywords', [])
                 
-            #创建触发词到回复的映射字典，提高查找效率,懒得写自己品了
-            self.trigger_map = {pair['trigger']: pair['response'] for pair in self.keyword_pairs}
+            # 编译正则表达式模式以提高性能
+            self.compiled_patterns = []
+            for pair in self.keyword_pairs:
+                pattern = re.compile(pair['trigger'])
+                self.compiled_patterns.append({
+                    'pattern': pattern,
+                    'trigger': pair['trigger'],
+                    'response': pair['response']
+                })
             logger.info(f"成功加载 {len(self.keyword_pairs)} 对关键词配置")
         except FileNotFoundError:
             logger.warning("配置文件未找到，使用默认配置")
         except Exception as e:
             logger.error(f"加载配置文件时出错: {e}")
-
 
     @event_message_type(EventMessageType.ALL)
     async def on_message(self, event: AstrMessageEvent) -> MessageEventResult:
@@ -49,12 +55,13 @@ class FurryEmojiPlugin(Star):
         # 添加调试日志，查看消息发送者信息
         logger.debug(f"收到消息: {text}, 发送者: {msg_obj.sender}")
         
-        # 只有当文本完全匹配触发词时才回复
-        if text.strip() in self.trigger_map:
-            logger.debug(f"匹配到触发词: {text.strip()}")
-            return event.plain_result(self.trigger_map[text.strip()])
-        else:
-            logger.debug(f"未匹配到触发词: {text.strip()}")
+        # 使用正则表达式匹配触发词
+        for pattern_info in self.compiled_patterns:
+            if pattern_info['pattern'].fullmatch(text.strip()):
+                logger.debug(f"正则匹配到触发词: {pattern_info['trigger']}")
+                return event.plain_result(pattern_info['response'])
+            else:
+                logger.debug(f"未匹配到触发词: {text.strip()}")
             
         return None
 
