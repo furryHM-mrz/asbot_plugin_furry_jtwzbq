@@ -1,3 +1,4 @@
+import logging
 import random
 import requests
 from astrbot.api.star import Context, Star, register
@@ -7,13 +8,9 @@ import re
 import yaml
 import os
 
-def __init__(self, context: Context):
-    super().__init__(context)
-    self.keyword_pairs = []
-    self.trigger_map = {}  # 创建触发词到回复的映射字典
-    self.logger = context.logger
+logger = logging.getLogger(__name__)
 
-@register("asbot_plugin_furry_jtwzbq", "furryhm", "监听文字表情时重复发送", "1.0.0")
+@register("asbot_plugin_furry_jtwzbq", "furryhm", "监听文字表情时重复发送", "1.2.0")
 class FurryEmojiPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
@@ -37,30 +34,9 @@ class FurryEmojiPlugin(Star):
             logger.info(f"成功加载 {len(self.keyword_pairs)} 对关键词配置")
         except FileNotFoundError:
             logger.warning("配置文件未找到，使用默认配置")
-            self.set_default_config()
         except Exception as e:
             logger.error(f"加载配置文件时出错: {e}")
-            self.set_default_config()
 
-    def set_default_config(self):
-        """设置默认配置"""
-        self.keyword_pairs = [
-            {"trigger": "awa", "response": "qwq"},
-            {"trigger": "qwq", "response": "awa"},
-            {"trigger": "uwu", "response": "QAQ"},
-            {"trigger": "QAQ", "response": "uwu"},
-            {"trigger": "owo", "response": "xwx"},
-            {"trigger": "sws", "response": "zwz"},
-            {"trigger": "xwx", "response": "owo"},
-            {"trigger": "zwz", "response": "sws"},
-            {"trigger": "hwh", "response": "xvx"},
-            {"trigger": "xvx", "response": "hwh"},
-            {"trigger": "ywy", "response": "zaz"},
-            {"trigger": "zaz", "response": "ywy"},
-            {"trigger": "mwm", "response": "nwn"},
-            {"trigger": "nwn", "response": "mwm"}
-        ]
-        self.trigger_map = {pair['trigger']: pair['response'] for pair in self.keyword_pairs}
 
     @event_message_type(EventMessageType.ALL)
     async def on_message(self, event: AstrMessageEvent) -> MessageEventResult:
@@ -70,9 +46,15 @@ class FurryEmojiPlugin(Star):
         msg_obj = event.message_obj
         text = msg_obj.message_str or ""
         
+        # 添加调试日志，查看消息发送者信息
+        logger.debug(f"收到消息: {text}, 发送者: {msg_obj.sender}")
+        
         # 只有当文本完全匹配触发词时才回复
         if text.strip() in self.trigger_map:
+            logger.debug(f"匹配到触发词: {text.strip()}")
             return event.plain_result(self.trigger_map[text.strip()])
+        else:
+            logger.debug(f"未匹配到触发词: {text.strip()}")
             
         return None
 

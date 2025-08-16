@@ -50,11 +50,11 @@ keywords:
   - trigger: "pwp"
     response: "qvq"
     
-  - trigger: "TAT"
-    response: "TUT"
+  - trigger: "666"
+    response: "6969"
     
-  - trigger: "TUT"
-    response: "TAT"
+  - trigger: "6969"
+    response: "666"
     
   - trigger: "Orz"
     response: "OvO"
@@ -68,17 +68,17 @@ keywords:
   - trigger: "DX"
     response: "XD"
     
-  - trigger: ":-)"
-    response: ":-("
+  - trigger: "中"
+    response: "太中嘞"
     
-  - trigger: ":-("
-    response: ":-)"
+  - trigger: "太中嘞"
+    response: "中"
     
-  - trigger: "^.^"
-    response: "T.T"
+  - trigger: "俺不中嘞"
+    response: "不中"
     
-  - trigger: "T.T"
-    response: "^.^"
+  - trigger: "不中"
+    response: "俺不中嘞"
     
   - trigger: ">_<"
     response: "o_o"
@@ -104,11 +104,11 @@ keywords:
   - trigger: "&_&"
     response: "*_*"
     
-  - trigger: "w"
-    response: "m"
+  - trigger: "好色"
+    response: "喜欢~"
     
-  - trigger: "m"
-    response: "w"
+  - trigger: "好涩"
+    response: "喜欢~"
     
   - trigger: "嗷呜"
     response: "呜嗷"
@@ -122,8 +122,11 @@ keywords:
   - trigger: "爪爪"
     response: "毛毛"
     
-  - trigger: "尾巴"
-    response: "耳朵"
-    
-  - trigger: "耳朵"
+  - trigger: "臭臭的"
     response: "尾巴"
+    
+  - trigger: "吸烟"
+    response: "唔!烟,吸烟?不准!"
+    
+  - trigger: "?"
+    response: "脑子里只剩问号惹~"
